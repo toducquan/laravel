@@ -1,4 +1,6 @@
 @extends('template')
 @section('content')
-<p>abc</p>
+@auth
+    <p> {{ Auth::user()->email }}</p>
+@endauth
 @endsection

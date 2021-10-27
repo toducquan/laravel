@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Post;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -22,22 +24,20 @@ class UserController extends Controller
         $user = new User();
         $user->name = $request->username;
         $user->email = $request->email;
-        $user->password = $request->password;
+        $user->password = Hash::make($request->password);
         $user->save();
         return redirect('/user/login');
     }
     public function index(Request $request){
+        Post::create(["title" => "abc", "content" => "abc", "created_by" => 1]);
         $email = $request->email;
         $password = $request->password;
-        // dd($request->all());
-        // dd(Auth::attempt(['email' => $email, 'password' => $password]), $email, $password);
+        Log::info("abcd" . $email .$password);
+
         if (Auth::attempt(['email' => $email, 'password' => $password])) {
-            Log::info("abcd" . $email);
-            // $request->session()->regenerate();
+            Log::info("mail " . Auth::user()->email);
             return redirect('/user/infor');
         }
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ]);
+        return redirect('/');
     }
 }

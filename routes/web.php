@@ -18,7 +18,7 @@ Route::get('/', function () {
 });
 
 Route::prefix('user')->group(function () {
-    Route::get('infor', 'UserController@infor');
+    Route::get('infor', 'UserController@infor')->middleware('auth');
     Route::get('login', 'UserController@login')->name('login');
     Route::get('register', 'UserController@register')->name('register');
 });
