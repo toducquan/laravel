@@ -68,53 +68,13 @@
             display: none;
         }
 
-        .container {
-            position: relative;
-            z-index: 1;
-            max-width: 300px;
-            margin: 0 auto;
-        }
-
-        .container:before,
-        .container:after {
-            content: "";
-            display: block;
-            clear: both;
-        }
-
-        .container .info {
-            margin: 50px auto;
-            text-align: center;
-        }
-
-        .container .info h1 {
-            margin: 0 0 15px;
-            padding: 0;
-            font-size: 36px;
-            font-weight: 300;
-            color: #1a1a1a;
-        }
-
-        .container .info span {
-            color: #4d4d4d;
-            font-size: 12px;
-        }
-
-        .container .info span a {
-            color: #000000;
-            text-decoration: none;
-        }
-
-        .container .info span .fa {
-            color: #EF3B3A;
-        }
     </style>
     <div class="login-page">
         <div class="form">
             <form class="login-form" action="/login" method="POST">
                 @csrf
-                <input type="text" placeholder="username" name="email"/>
-                <input type="password" placeholder="password" name="password"/>
+                <input type="text" placeholder="username" name="email" />
+                <input type="password" placeholder="password" name="password" />
                 <button>login</button>
                 <p class="message">Not registered? <a href="{{ route('register') }}">Create an account</a></p>
             </form>

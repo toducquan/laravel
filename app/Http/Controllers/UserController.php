@@ -7,37 +7,63 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Hash;
+use App\Http\Services\UserService;
 
 class UserController extends Controller
 {
-    public function login(){
+    private $userService;
+
+    public function __construct()
+    {
+        $this->userService = app('UserService');
+    }
+
+    public function loginView()
+    {
         return view('login');
     }
-    public function register(){
+    public function registerView()
+    {
         return view('register');
     }
-    public function infor(){
-        return view('infor');
+    public function adminView(){
+        $users = $this->userService->getAllUser();
+        return view('admin', [
+            "users" => $users
+        ]);
     }
-    public function store(Request $request){
-        $user = new User();
-        $user->name = $request->username;
-        $user->email = $request->email;
-        $user->password = Hash::make($request->password);
-        $user->save();
-        return redirect('/user/login');
+    public function register(Request $request)
+    {
+        $this->userService->addNewUser($request->name, $request->email, $request->password);
+        return redirect('/view/login');
     }
-    public function index(Request $request){
-        Post::create(["title" => "abc", "content" => "abc", "created_by" => 1]);
+    public function login(Request $request)
+    {
         $email = $request->email;
         $password = $request->password;
-        Log::info("abcd" . $email .$password);
 
         if (Auth::attempt(['email' => $email, 'password' => $password])) {
-            Log::info("mail " . Auth::user()->email);
-            return redirect('/user/infor');
+            $user = Auth::user();
+            $roles = json_decode($user->roles);
+            foreach ($roles as $role){
+                foreach ($role as $key => $value){
+                    if($key=="role" && $value == 1)
+                        return redirect('/view/admin');
+                }
+            }
+            return redirect('/view/infor');
         }
-        return redirect('/');
+        return redirect('/view/login');
+    }
+    public function logout(Request $request)
+    {
+        Auth::logout();
+
+        return redirect('/view/login');
+    }
+    public function destroy($id)
+    {
+        $this->userService->deleteUserById($id);
+        return back();
     }
 }

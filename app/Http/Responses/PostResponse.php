@@ -1,9 +1,10 @@
 <?php
+namespace App\Http\Responses;
 
-interface PostResponse{
-    public function addNewPost($title, $content, $create_by);
-    public function getAllPost();
-    public function getPostWithId($id);
-    public function changePostById($id, $content);
-    public function deletePostById($id);
+abstract class PostResponse{
+    abstract protected function addNewPost($title, $content, $create_by);
+    abstract protected function getAllPost();
+    abstract protected function getPostWithId($id);
+    abstract protected function changePostById($id, $content);
+    abstract protected function deletePostById($id);
 }

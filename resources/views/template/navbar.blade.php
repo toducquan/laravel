@@ -105,7 +105,13 @@
         <a href="#">About</a>
         <a href="#">Blog</a>
         <a href="#">Portefolio</a>
-        <a href="#">Contact</a>
+        @auth
+            <a href="/logout">Logout</a>
+        @endauth
+
+        @guest
+            <a href="#">Login</a>
+        @endguest
         <div class="animation start-home"></div>
     </nav>
 </body>

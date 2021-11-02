@@ -40,4 +40,7 @@ class User extends Authenticatable
     public function posts(){
         return $this-> hasMany(Post::class, 'created_by', 'id');
     }
+    public function roles(){
+        return $this-> hasMany(Role::class, 'user_id', 'id');
+    }
 }
