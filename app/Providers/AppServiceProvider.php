@@ -24,9 +24,6 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind('PostService', function (){
             return new PostService();
         });
-        $this->app->bind('RoleService', function (){
-            return new RoleService();
-        });
     }
 
     /**

@@ -5,45 +5,56 @@ namespace App\Policies;
 use App\Post;
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Support\Facades\Log;
 use phpDocumentor\Reflection\Types\True_;
 
 class PostPolicy
 {
-    use HandlesAuthorization;
+    public function getPost(User $user){
+        $flag = 0;
+        foreach ($user->roles as $role){
+            foreach ($role->permissions as $permission){
+                if($permission['name'] == 'get_post')
+                    $flag = 1;
+            }
+        }
+        if ($flag == 1) return true;
+        return false;
+    }
 
-    /**
-     * Create a new policy instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        //
-    }
-    public function update(User $user, Post $post){
-        return $user->id === $post->created_by;
-    }
-    public function add(User $user){
-        $roles = json_decode($user->roles);
+    public function addPost(User $user){
         $flag = 0;
-        foreach ($roles as $role){
-            foreach ($role as $key => $value){
-                if($key=="role" && $value == 2)
+        foreach ($user->roles as $role){
+            foreach ($role->permissions as $permission){
+                if($permission['name'] == 'add_post')
                     $flag = 1;
             }
         }
-        if ($flag==1) return false;
-        return true;
+        if ($flag == 1) return true;
+        return false;
     }
-    public function before($user){
-        $roles = json_decode($user->roles);
+
+    public function editPost(User $user, Post $post){
         $flag = 0;
-        foreach ($roles as $role){
-            foreach ($role as $key => $value){
-                if($key=="role" && $value == 1)
+        foreach ($user->roles as $role){
+            foreach ($role->permissions as $permission){
+                if($permission['name'] == 'edit_post' && ($post->created_by == $user ->id || $role['name'] == 'admin'))
                     $flag = 1;
             }
         }
-        if ($flag==1) return true;
+        if ($flag == 1) return true;
+        return false;
+    }
+
+    public function deletePost(User $user, Post $post){
+        $flag = 0;
+        foreach ($user->roles as $role){
+            foreach ($role->permissions as $permission){
+                if($permission['name'] == 'delete_post' && ($post->created_by == $user ->id || $role['name'] == 'admin'))
+                    $flag = 1;
+            }
+        }
+        if ($flag == 1) return true;
+        return false;
     }
 }

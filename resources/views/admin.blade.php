@@ -33,7 +33,6 @@
                 </tbody>
             </table>
             <a class="btn btn-success btn-lg mt-5" href="/view/manage">Manage</a>
-            <a class="btn btn-success btn-lg mt-5" href="/view/role">Role</a>
         </div>
     @endauth
 @endsection

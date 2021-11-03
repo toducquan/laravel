@@ -28,6 +28,8 @@ class UserController extends Controller
     }
     public function adminView(){
         $users = $this->userService->getAllUser();
+        if (Auth::user()->cannot('getUser', User::class))
+            return redirect('/view/login');
         return view('admin', [
             "users" => $users
         ]);
@@ -41,16 +43,9 @@ class UserController extends Controller
     {
         $email = $request->email;
         $password = $request->password;
-
         if (Auth::attempt(['email' => $email, 'password' => $password])) {
-            $user = Auth::user();
-            $roles = json_decode($user->roles);
-            foreach ($roles as $role){
-                foreach ($role as $key => $value){
-                    if($key=="role" && $value == 1)
-                        return redirect('/view/admin');
-                }
-            }
+            if (Auth::user()->can('getUser', User::class))
+                return redirect('/view/admin');
             return redirect('/view/infor');
         }
         return redirect('/view/login');

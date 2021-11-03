@@ -18,7 +18,7 @@
                             <td>{{ $post['title'] }}</td>
                             <td>{{ $post['content'] }}</td>
                             <td>
-                                @can('update', $post)
+                                @can('editPost', $post)
                                     <a href="/view/edit/{{ $post['id'] }}" style="color: black; text-decoration: unset">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                              class="bi bi-pencil-square" viewBox="0 0 16 16">
@@ -44,7 +44,7 @@
                     @endforeach
                 </tbody>
             </table>
-            @can('add', App\Post::class)
+            @can('addPost', $post)
                 <a class="btn btn-success btn-lg mt-5" href="/view/addPost">New</a>
             @endcan
         </div>

@@ -33,18 +33,13 @@ class PostController extends Controller
 
     public function create(Request $request)
     {
-        if(Auth::user()->can('add')){
-            $this->postService->addNewPost($request->title, $request->contents, Auth::user()->id);
-        }
+        $this->postService->addNewPost($request->title, $request->contents, Auth::user()->id);
         return redirect("/view/infor");
     }
 
     public function updateView($id)
     {
         $post = $this->postService->getPostWithId($id);
-        if(Auth::user()->cant('update', $post)){
-            return redirect('/view/infor');
-        }
         return view('editPost', [
             'post' => $post
         ]);
@@ -53,9 +48,7 @@ class PostController extends Controller
     public function update(Request $request, $id)
     {
         $post = $this->postService->getPostWithId($id);
-        if(Auth::user()->can('update', $post)){
-            $this->postService->changePostById($id, $request->contents);
-        }
+        $this->postService->changePostById($id, $request->contents);
         return redirect("/view/infor");
     }
 
@@ -63,9 +56,6 @@ class PostController extends Controller
     public function destroy($id)
     {
         $post = $this->postService->getPostWithId($id);
-        if(Auth::user()->cant('update', $post)){
-            return redirect('/view/infor');
-        }
         $this->postService->deletePostById($id);
         return back();
     }
