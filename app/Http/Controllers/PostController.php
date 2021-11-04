@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Responses\ResponseInterface\PostInterface;
 use App\Post;
 use Illuminate\Http\Request;
 use App\Http\Services\PostService;
@@ -12,14 +13,14 @@ class PostController extends Controller
 {
     private $postService;
 
-    public function __construct()
+    public function __construct(PostInterface $postService)
     {
-        $this->postService = app('PostService');
+        $this->postService = $postService;
     }
 
     public function index()
     {
-        $posts = $this->postService->getAllPost();
+        $posts = $this->postService->getAll();
         return view('infor', [
             'posts' => $posts
         ]);
@@ -39,7 +40,7 @@ class PostController extends Controller
 
     public function updateView($id)
     {
-        $post = $this->postService->getPostWithId($id);
+        $post = $this->postService->find($id);
         return view('editPost', [
             'post' => $post
         ]);
@@ -47,16 +48,18 @@ class PostController extends Controller
 
     public function update(Request $request, $id)
     {
-        $post = $this->postService->getPostWithId($id);
-        $this->postService->changePostById($id, $request->contents);
+        $post = $this->postService->find($id);
+        if(Auth::user()->can('editPost', $post))
+            $this->postService->changePostById($id, $request->contents);
         return redirect("/view/infor");
     }
 
 
     public function destroy($id)
     {
-        $post = $this->postService->getPostWithId($id);
-        $this->postService->deletePostById($id);
+        $post = $this->postService->find($id);
+        if(Auth::user()->can('editPost', $post))
+            $this->postService->destroy($id);
         return back();
     }
 }

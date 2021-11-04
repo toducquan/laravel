@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Http\Responses\ResponseInterface\PostInterface;
+use App\Http\Responses\ResponseInterface\UserInterface;
 use App\Http\Services\PostService;
 use App\Http\Services\RoleService;
 use App\Http\Services\UserService;
@@ -18,12 +20,14 @@ class AppServiceProvider extends ServiceProvider
 
     public function register()
     {
-        $this->app->bind('UserService', function (){
-            return new UserService();
-        });
-        $this->app->bind('PostService', function (){
-            return new PostService();
-        });
+        $this->app->singleton(
+            UserInterface::class,
+            UserService::class
+        );
+        $this->app->singleton(
+            PostInterface::class,
+            PostService::class
+        );
     }
 
     /**

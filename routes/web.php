@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Http\Request;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -31,7 +32,12 @@ Route::prefix('view')->group(function () {
 Route::post('/register', 'UserController@register');
 Route::post('/login', 'UserController@login');
 Route::get('/logout', 'UserController@logout');
-Route::get('/post/{id}', 'PostController@destroy')->middleware(['auth', 'can:deletePost, App\Post']);
+Route::get('/post/{id}', 'PostController@destroy')->middleware(['auth']);
 Route::get('/user/{id}', 'UserController@destroy')->middleware(['can:deleteUser, App\User', 'auth']);
 Route::post('/post', 'PostController@create')->middleware(['auth', 'can:addPost, App\Post']);
-Route::post('/edit/{id}', 'PostController@update')->middleware(['auth', 'can:editPost, App\Post']);
+Route::post('/edit/{id}', 'PostController@update')->middleware(['auth']);
+
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

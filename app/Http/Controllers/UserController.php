@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Responses\ResponseInterface\UserInterface;
 use App\Post;
 use App\User;
 use Illuminate\Http\Request;
@@ -13,9 +14,9 @@ class UserController extends Controller
 {
     private $userService;
 
-    public function __construct()
+    public function __construct(UserInterface $userService)
     {
-        $this->userService = app('UserService');
+        $this->userService = $userService;
     }
 
     public function loginView()
@@ -27,7 +28,7 @@ class UserController extends Controller
         return view('register');
     }
     public function adminView(){
-        $users = $this->userService->getAllUser();
+        $users = $this->userService->getAll();
         if (Auth::user()->cannot('getUser', User::class))
             return redirect('/view/login');
         return view('admin', [
@@ -58,7 +59,7 @@ class UserController extends Controller
     }
     public function destroy($id)
     {
-        $this->userService->deleteUserById($id);
+        $this->userService->destroy($id);
         return back();
     }
 }
