@@ -17,9 +17,10 @@ use Illuminate\Http\Request;
 Route::get('/', function () {
     return view('welcome');
 });
+Auth::routes(['verify'=>true]);
 
 Route::prefix('view')->group(function () {
-    Route::get('infor', 'PostController@index')->middleware(['auth', 'can:getPost, App\Post']);
+    Route::get('infor', 'PostController@index')->middleware(['auth', 'verified']);
     Route::get('login', 'UserController@loginView')->name('login');
     Route::get('register', 'UserController@registerView')->name('register');
     Route::get('addPost', 'PostController@createView')->middleware(['auth', 'can:addPost, App\Post']);
@@ -37,7 +38,10 @@ Route::get('/user/{id}', 'UserController@destroy')->middleware(['can:deleteUser,
 Route::post('/post', 'PostController@create')->middleware(['auth', 'can:addPost, App\Post']);
 Route::post('/edit/{id}', 'PostController@update')->middleware(['auth']);
 
-
-Auth::routes();
+Route::group(['middleware' => []], function() {
+    Route::get('/email/verify', 'VerificationController@show')->name('verification.notice');
+    Route::get('/email/verify/{id}/{hash}', 'VerificationController@verify')->name('verification.verify')->middleware(['signed']);
+    Route::post('/email/resend', 'VerificationController@resend')->name('verification.resend');
+});
 
 Route::get('/home', 'HomeController@index')->name('home');

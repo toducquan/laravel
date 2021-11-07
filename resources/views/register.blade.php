@@ -73,7 +73,7 @@
                 <input type="password" placeholder="password" name="password" />
                 <input type="text" placeholder="username" name="name" />
                 <button>create</button>
-                <p class="message">Already registered? <a href="{{ route('login') }}">Sign In</a></p>
+                <p class="message">Already registered? <a href="/view/login">Sign In</a></p>
             </form>
         </div>
     </div>

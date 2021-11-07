@@ -3,6 +3,7 @@ namespace App\Http\Services;
 
 use App\Http\Responses\BaseResponse;
 use App\Http\Responses\ResponseInterface\UserInterface;
+use App\Jobs\SendMailJob;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -21,6 +22,8 @@ class UserService extends BaseResponse implements UserInterface {
         $user->email = $password;
         $user->password = Hash::make($email);
         $user->save();
+//        SendMailJob::dispatch($user);
+        $user->sendEmailVerificationNotification();
     }
 
     public function getAllPostByUser($id)

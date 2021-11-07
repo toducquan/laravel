@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Jobs\SendMailJob;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -43,5 +44,8 @@ class User extends Authenticatable implements MustVerifyEmail
     public function roles()
     {
         return $this->belongsToMany(Role::class);
+    }
+    public function sendEmailVerificationNotification(){
+        SendMailJob::dispatch($this);
     }
 }
